@@ -72,5 +72,6 @@ else :
 
 plt.legend()
 plt.xlabel(r"wavelength (nm)")
-plt.ylabel(r"transit radius R$_{\rm Jup}$")
+#plt.ylabel(r"transit radius R$_{\rm Jup}$")
+plt.ylabel(r"relative transmission")
 plt.show()
