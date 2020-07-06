@@ -36,6 +36,30 @@ atmosphere = Radtrans(line_species=['CH4_main_iso','CO_main_iso','H2O_main_iso',
                     continuum_opacities = ['H2-H2', 'H2-He'], \
                     mode='lbl', \
                     wlen_bords_micron = WLEN)
+    
+# atmosphere = Radtrans(line_species=['CO_main_iso'], \
+#                     rayleigh_species=['H2','He'], \
+#                     continuum_opacities = ['H2-H2', 'H2-He'], \
+#                     mode='lbl', \
+#                     wlen_bords_micron = WLEN)
+
+# atmosphere = Radtrans(line_species=['H2O_main_iso'], \
+#                     rayleigh_species=['H2','He'], \
+#                     continuum_opacities = ['H2-H2', 'H2-He'], \
+#                     mode='lbl', \
+#                     wlen_bords_micron = WLEN)
+    
+# atmosphere = Radtrans(line_species=['CH4_main_iso'], \
+#                     rayleigh_species=['H2','He'], \
+#                     continuum_opacities = ['H2-H2', 'H2-He'], \
+#                     mode='lbl', \
+#                     wlen_bords_micron = WLEN)
+    
+# atmosphere = Radtrans(line_species=['K'], \
+#                     rayleigh_species=['H2','He'], \
+#                     continuum_opacities = ['H2-H2', 'H2-He'], \
+#                     mode='lbl', \
+#                     wlen_bords_micron = WLEN)
 
 #%%
 # Create pressure and temperature distribution: Guillot
