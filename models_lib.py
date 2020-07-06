@@ -52,7 +52,7 @@ def get_spectrum_info_from_fits(filename) :
     return loc
 
 
-def get_best_model_file (modeldb, T_EQU=1100, R_PL=1.25, M_PL=1.81) :
+def get_best_model_file(modeldb, T_EQU=1100, R_PL=1.25, M_PL=1.81, species='all') :
     """
         Get file path of best model in input database
         
@@ -60,7 +60,8 @@ def get_best_model_file (modeldb, T_EQU=1100, R_PL=1.25, M_PL=1.81) :
         :param T_EQU: float, input equilibrium temperature [K]
         :param R_PL: float, input planet radius [RJup]
         :param M_PL: float, input planet mass [MJup]
-        
+        :param species: string, input molecular species
+
         :return filepath: string, file path for best model matching input params
         """
 
@@ -83,7 +84,7 @@ def get_best_model_file (modeldb, T_EQU=1100, R_PL=1.25, M_PL=1.81) :
         d_R_PL = np.abs(datastore[key]['R_PL'] - R_PL)
         d_M_PL = np.abs(datastore[key]['M_PL'] - M_PL)
     
-        if d_T_EQU <= mind_T_EQU and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL :
+        if d_T_EQU <= mind_T_EQU and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
             mind_T_EQU = d_T_EQU
             mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
             minkey = key
@@ -91,20 +92,55 @@ def get_best_model_file (modeldb, T_EQU=1100, R_PL=1.25, M_PL=1.81) :
     # return best model file path
     return datastore[minkey]['filepath']
 
-"""
 
-def load_spectrum_from_fits (filename, wlmin=900., wlmax=2500.) :
-    loc = get_BTSettl_spectrum_info_from_fits(filename)
+def load_spectrum_from_fits(filename, wlmin=900., wlmax=2500.) :
+
+    # initialize model spectrum with header info
+    loc = get_spectrum_info_from_fits(filename)
+    
+    # load fits data
     hdu = fits.open(filename)
-    wl = hdu[1].data['Wavelength'] * 1000.
-    flux = hdu[1].data['Flux']
+    hdr = hdu[0].header
+    
+    wl_0 = hdr["CRVAL1"]
+    wl_f = hdr["CRVALEND"]
+    wl_step = hdr["CDELT1"]
+    
+    wl_num = len(hdu["TRANSMISSION"].data)
+    
+    # create wavelength array
+    wl = np.geomspace(wl_0*1000., wl_f*1000., wl_num)
+    
+    transmission = hdu["TRANSMISSION"].data
+
     wlmask = np.where(np.logical_and(wl > wlmin, wl < wlmax))
+    
     loc['wl'] = wl[wlmask]
-    loc['flux'] = flux[wlmask] / np.max(flux[wlmask])
-    loc['fluxerr'] = np.zeros_like(loc['wl'])
+    max_transm = np.max(transmission[wlmask])
+    loc['transmission'] = (max_transm - transmission[wlmask]) / np.max((max_transm - transmission[wlmask]))
+
     return loc
 
+def species_colors() :
+    colors = {}
+    colors["h2o"]='#1f77b4'
+    colors["co2"]='#ff7f0e'
+    colors["ch4"]='#2ca02c'
+    colors["o2"]='#d62728'
+    colors["co"]='#9467bd'
+    colors["k"]='#8c564b'
+    colors["n2o"]='#e377c2'
+    colors["no"]='#7f7f7f'
+    colors["so2"]='#bcbd22'
+    colors["no2"]='#17becf'
+    colors["nh3"]='blue'
+    colors["hno3"]='green'
+    colors["o3"]='grey'
 
+    return colors
+
+
+"""
 def calculate_model(modeldb, observed_wl, resolution=0., teff=5777., logg=4.4374, feh=0.0, normalize=False) :
 
     loc = {}
