@@ -111,15 +111,21 @@ def load_spectrum_from_fits(filename, wlmin=900., wlmax=2500.) :
     # create wavelength array
     wl = np.geomspace(wl_0*1000., wl_f*1000., wl_num)
     
-    transmission = hdu["TRANSMISSION"].data
-
     wlmask = np.where(np.logical_and(wl > wlmin, wl < wlmax))
-    
     loc['wl'] = wl[wlmask]
-    max_transm = np.max(transmission[wlmask])
-    loc['transmission'] = (max_transm - transmission[wlmask]) / np.max((max_transm - transmission[wlmask]))
+
+    if "TRANSMISSION" in hdu :
+        transmission = hdu["TRANSMISSION"].data
+        #max_transm = np.max(transmission[wlmask])
+        #loc['transmission'] = (max_transm - transmission[wlmask]) / np.max((max_transm - transmission[wlmask]))
+        loc['transmission'] = transmission[wlmask]
+        
+    if "EMISSION" in hdu :
+        emission = hdu["EMISSION"].data
+        loc['emission'] = emission[wlmask]
 
     return loc
+
 
 def species_colors() :
     colors = {}
