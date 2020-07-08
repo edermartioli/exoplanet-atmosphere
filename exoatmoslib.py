@@ -80,7 +80,6 @@ def save_to_fits(output, loc) :
     header.set('GRAVITY', loc['GRAVITY_CGS'], 'Planetary gravity at R_pl [g.cm-2]')
 
     header.set('TEQ', loc['TEQ'], 'Planetary equilibrium temperature [K]')
-    header.set('INTSTY', loc['INTENSITY'], 'Intensity of abundance of molecule')
 
     # set up transmission extension
     transm_header = fits.Header()
@@ -200,10 +199,11 @@ def calculate_model(loc) :
     loc_abundances = {}
     # Define abundances of line species and mean molecular weight of atmosphere
     for i in range(len(loc["OPACITY_FILES"])) :
-        loc_abundances[loc["OPACITY_FILES"][i]] = loc['ABUNDANCES'][i] * np.ones_like(temperature)*(1-(loc['INTENSITY']-1)*0.01556)
+        ab_percent = 10**(loc['ABUNDANCES'][i] + np.log10(loc['AB_H2']))
+        loc_abundances[loc["OPACITY_FILES"][i]] = loc['ABUNDANCES'][i] * np.ones_like(temperature)
     # Define abundances of H2 and He and mean molecular weight of atmosphere
-    loc_abundances["He"] = loc['AB_He'] * np.ones_like(temperature)*(1-(loc['INTENSITY']-1)*0.01556)
-    loc_abundances["H2"] = loc['AB_H2'] * np.ones_like(temperature)*(1-(loc['INTENSITY']-1)*0.01556)
+    loc_abundances["He"] = loc['AB_He'] * np.ones_like(temperature)
+    loc_abundances["H2"] = loc['AB_H2'] * np.ones_like(temperature)
 
     loc["loc_abundances"] = loc_abundances
 

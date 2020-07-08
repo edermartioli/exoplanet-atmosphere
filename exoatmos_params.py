@@ -12,7 +12,7 @@ def load_exoatmos_lib_parameters(libdir) :
 
     ##################### VARIABLES ######################
     # Define list of parameters considered as POSSIBLE variables
-    p['VARIABLES'] = ['TEQ', 'AB_He', 'AB_H2', 'ABUNDANCES', 'INTENSITY', 'MP', 'RP', 'TINT', 'P0', 'KAPPA', 'GAMMA']
+    p['VARIABLES'] = ['TEQ', 'AB_He', 'AB_H2', 'ABUNDANCES', 'MP', 'RP', 'TINT', 'P0', 'KAPPA', 'GAMMA']
     # Note: in fact only TEQ, ABUNDANCE (for 1 species), RP, and MP are variables
     #       but the list above may be used in future implementations to allow
     #       other variables library grid.
@@ -47,9 +47,10 @@ def load_exoatmos_lib_parameters(libdir) :
     
     ######### CHEMICAL COMPOSITION #############
     # Define abundance of Helium
-    p['AB_He'] = 0.19
+    p['AB_He'] = 0.24
     # Define abundance of H2
-    p['AB_H2'] = 0.81
+    p['AB_H2'] = 0.74
+    
     # Whether or not to generate separate models for each species
     p['SEPARATE_SPECIES'] = True
     # Define species for the atmospheric composition of models
@@ -57,8 +58,6 @@ def load_exoatmos_lib_parameters(libdir) :
     p['SPECIES'] = ['H2O']
     # Define log of mass fraction abundances: log([X]/[H2])
     p['ABUNDANCES'] = [[-4,-2,3]]
-    # Define intensity for all abundances
-    p['INTENSITY'] = 1.0
     #############################################
     # Define species included in the Rayleigh scattering
     p['RAYLEIGH_SPECIES'] = ['H2','He']
