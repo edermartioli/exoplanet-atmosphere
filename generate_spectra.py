@@ -90,6 +90,7 @@ abundances['H2'] = 0.81* np.ones_like(temperature)*(1-(i-1)*0.01556)
 MMW = 2.3 * np.ones_like(temperature) 
 
 atmosphere.calc_transm(temperature, abundances, gravity, MMW, R_pl=R_pl, P0_bar=P0)
+atmosphere.calc_flux(temperature, abundances, gravity, MMW)
 
 #%%
 
