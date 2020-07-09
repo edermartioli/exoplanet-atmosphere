@@ -26,4 +26,4 @@ One can test access to the library by the following command:
 python select_model.py --db=mini-lib/db.json --teq=1100 --rp=1.14 --mp=1.14 --species=H2O --ab=-3
 ```
 
-![Alt text](Figures/select_model_all.png?raw=true "Title")
+![Alt text](Figures/select_model_H2O.png?raw=true "Title")
