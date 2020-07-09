@@ -52,12 +52,13 @@ def get_spectrum_info_from_fits(filename) :
     return loc
 
 
-def get_best_model_file(modeldb, T_EQU=1100, R_PL=1.25, M_PL=1.81, species='all') :
+def get_best_model_file(modeldb, T_EQU=1100, AB=-4, R_PL=1.25, M_PL=1.81, species='all') :
     """
         Get file path of best model in input database
         
         :param modeldb: string, json database file name
         :param T_EQU: float, input equilibrium temperature [K]
+        :param AB: float, input abundance for selected species log([X]/[H2])
         :param R_PL: float, input planet radius [RJup]
         :param M_PL: float, input planet mass [MJup]
         :param species: string, input molecular species
@@ -73,19 +74,27 @@ def get_best_model_file(modeldb, T_EQU=1100, R_PL=1.25, M_PL=1.81, species='all'
         print("ERROR: could not open models database file ",modeldb)
         exit()
 
-    mind_T_EQU = 1.e20
+    mind_T_EQU, mind_ab = 1.e20, 1.e20
     mind_R_PL, mind_M_PL = 1.e20, 1.e20
 
     minkey = None
 
     # loop over all entried in the database to get best matched model file
     for key in datastore.keys() :
-        d_T_EQU = np.abs(datastore[key]['T_EQU'] - T_EQU)
-        d_R_PL = np.abs(datastore[key]['R_PL'] - R_PL)
-        d_M_PL = np.abs(datastore[key]['M_PL'] - M_PL)
+        
+        if species == 'all' :
+            ab_key = 'AB_{0}'.format(datastore[key]['SELECSPC'])
+        else :
+            ab_key = 'AB_{0}'.format(species)
+
+        d_T_EQU = np.abs(datastore[key]['TEQ'] - T_EQU)
+        d_ab = np.abs(datastore[key][ab_key] - AB)
+        d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
+        d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
     
-        if d_T_EQU <= mind_T_EQU and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
+        if d_T_EQU <= mind_T_EQU and d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
             mind_T_EQU = d_T_EQU
+            mind_ab = d_ab
             mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
             minkey = key
 
@@ -119,7 +128,7 @@ def load_spectrum_from_fits(filename, wlmin=900., wlmax=2500.) :
         #max_transm = np.max(transmission[wlmask])
         #loc['transmission'] = (max_transm - transmission[wlmask]) / np.max((max_transm - transmission[wlmask]))
         loc['transmission'] = transmission[wlmask]
-        
+    
     if "EMISSION" in hdu :
         emission = hdu["EMISSION"].data
         loc['emission'] = emission[wlmask]

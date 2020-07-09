@@ -29,6 +29,7 @@ import matplotlib.pyplot as plt
 parser = OptionParser()
 parser.add_option("-d", "--db", dest="db", help="Input database json file",type='string',default='')
 parser.add_option("-T", "--teq", dest="teq", help="Equilibrium temperature [K]",type='string',default='')
+parser.add_option("-a", "--ab", dest="ab", help="Abundance of species X, log([X]/[H2])",type='string',default='')
 parser.add_option("-R", "--rp", dest="rp", help="Planet radius [RJup]",type='string',default='')
 parser.add_option("-m", "--mp", dest="mp", help="Planet mass [MJup]",type='string',default='')
 parser.add_option("-s", "--species", dest="species", help="Select molecule species",type='string',default='all')
@@ -39,19 +40,20 @@ parser.add_option("-v", action="store_true", dest="verbose", help="verbose", def
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print("Error: check usage with create_stellar_model_db.py -h ")
+    print("Error: check usage with select_model.py -h ")
     sys.exit(1)
 
 if options.verbose:
     print('Input database json file: ', options.db)
     print('Equilibrium temperature [K]: ', options.teq)
+    print('Abundance of species X, log([X]/[H2]): ', options.ab)
     print('Planet radius [RJup]: ', options.rp)
     print('Planet mass [MJup]: ', options.mp)
     print('Select molecule species: ', options.species)
     print('Start wavelength: ', options.wl0)
     print('Final wavelength: ', options.wlf)
 
-best_model_filepath = models_lib.get_best_model_file(options.db, T_EQU=float(options.teq), R_PL=float(options.rp), M_PL=float(options.mp), species=options.species)
+best_model_filepath = models_lib.get_best_model_file(options.db, T_EQU=float(options.teq), AB=float(options.ab), R_PL=float(options.rp), M_PL=float(options.mp), species=options.species)
 
 print("Selected model: ", best_model_filepath)
 
@@ -60,7 +62,7 @@ if options.species == 'all' :
     plt.plot(model_all['wl'], model_all['transmission'], label="All")
 
     colors = models_lib.species_colors()
-    species_list = ['h2o', 'co', 'ch4', 'k']
+    species_list = ['H2O', 'CO', 'CH4', 'CO2']
     
     for species in species_list :
         model_filepath = models_lib.get_best_model_file(options.db, T_EQU=float(options.teq), R_PL=float(options.rp), M_PL=float(options.mp), species=species)
@@ -72,6 +74,6 @@ else :
 
 plt.legend()
 plt.xlabel(r"wavelength (nm)")
-#plt.ylabel(r"transit radius R$_{\rm Jup}$")
-plt.ylabel(r"relative transmission")
+plt.ylabel(r"transit radius R$_{\rm Jup}$")
+#plt.ylabel(r"relative transmission")
 plt.show()

@@ -1,7 +1,7 @@
 #---------------------------------------------------------------------
 #   define Library parameters
 # -----------------------------------------------------------------------------
-def load_exoatmos_lib_parameters(libdir) :
+def load_exoatmos_lib_parameters(libdir="", variable_parameters=False) :
     
     #initialize parameters dictionary
     p = {}
@@ -15,11 +15,11 @@ def load_exoatmos_lib_parameters(libdir) :
     p['VARIABLES'] = ['TEQ', 'AB_He', 'AB_H2', 'ABUNDANCES', 'MP', 'RP', 'TINT', 'P0', 'KAPPA', 'GAMMA']
     # Note: in fact only TEQ, ABUNDANCE (for 1 species), RP, and MP are variables
     #       but the list above may be used in future implementations to allow
-    #       other variables library grid.
+    #       other variables in the library grid.
     
-    # Set index for the selected species which the abundance is variable
+    # Set index below for the selected species which the abundance is variable
     p['VARIABLE_SPECIES_INDEX'] = 0
-    # Note: the index above is because we consider only one species to vary abundance
+    # Note: the index above is because we consider only one species to vary abundance at a time
     #       One can include more species in the model, but the abundances must be constant
     #-----------------------------------------------------
     
@@ -37,11 +37,13 @@ def load_exoatmos_lib_parameters(libdir) :
     #-----------------------------------------------------
     
     ########### EQUILIBRIUM TEMPERATURE [K] ###############
-    # Define equilibrium temperature.
+    # Equilibrium temperature [K]
     # For ranges insert 3 values: [ini, end, nsamples]
-    p['TEQ'] = [1000, 1200, 3]
-    # For constant temperature insert a single value: Teq
-    # p['TEQ'] = 1100
+    if variable_parameters :
+        p['TEQ'] = [1000, 1200, 3]
+    else :
+        # For constant temperature insert a single value: Teq
+        p['TEQ'] = 1100
     ### Follow the same format for all variables below
     #-----------------------------------------------------
     
@@ -53,11 +55,14 @@ def load_exoatmos_lib_parameters(libdir) :
     
     # Whether or not to generate separate models for each species
     p['SEPARATE_SPECIES'] = True
-    # Define species for the atmospheric composition of models
+    # Species for the atmospheric composition of models
     #p['SPECIES'] = ['H2O', 'CO2', 'CO', 'CH4']
     p['SPECIES'] = ['H2O']
-    # Define log of mass fraction abundances: log([X]/[H2])
-    p['ABUNDANCES'] = [[-4,-2,3]]
+    # Log of molar fraction abundances: log([X]/[H2])
+    if variable_parameters :
+        p['ABUNDANCES'] = [[-4,-2,3]]
+    else :
+        p['ABUNDANCES'] = [-3.5]
     #############################################
     # Define species included in the Rayleigh scattering
     p['RAYLEIGH_SPECIES'] = ['H2','He']
@@ -67,9 +72,9 @@ def load_exoatmos_lib_parameters(libdir) :
     
     ######### PLANET PHYSICAL PARAMETERS ##########
     # planet mass in [MJup]
-    p['MP'] = 1.81
+    p['MP'] = 1.142
     # planet radius in [RJup]
-    p['RP'] = 1.81
+    p['RP'] = 1.138
     # planet internal temperature in [K]
     p['TINT'] = 500.
     # atmospheric pressure [bar] at "surface" defined by planet radius
