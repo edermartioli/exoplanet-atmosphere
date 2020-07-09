@@ -17,7 +17,7 @@ The following routine generates a library of models:
 python generate_library.py --libdir=./mini-lib/
 ```
 
-Here we make available a mini-version of a library to allow testing of routines to manage the library. The full library is stored at the IAP exo-atmos server.
+Here we make available a mini-version of the library using the parameters in `exoatmos_params.py` to allow testing of routines to manage the library. The full library is stored at the IAP exo-atmos server.
 
 One can test access to the library by the following command:
 
