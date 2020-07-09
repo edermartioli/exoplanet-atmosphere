@@ -40,10 +40,10 @@ def save_to_fits(output, loc) :
     
     # set up primary header keywords
     header.set('ORIGIN', "petitRADTRANS v. 67b06e0d")
-    header.set('RESO', loc['MODE'], 'Resolution mode')
+    header.set('RESOMODE', loc['MODE'], 'Resolution mode')
     header.set('P0', loc['P0'], 'Reference pressure [bar]')
     header.set('GAMMA', loc['GAMMA'], 'Ratio between optical and IR opacity')
-    header.set('KAPPA', loc['KAPPA'], 'Atmospheric opacity in the IR wavelengths')
+    header.set('KAPPA', loc['KAPPA'], 'Atmospheric opacity coefficient in the IR')
     header.set('TINT', loc['TINT'], 'Planetary internal temperature [K]')
 
     for i in range(len(loc["CONTINUUM_OPACITIES"])) :
@@ -54,18 +54,21 @@ def save_to_fits(output, loc) :
         keyword = 'RS_{0}'.format(item)
         header.set(keyword, loc["RAYLEIGH_SPECIES"][i], 'Rayleigh scattering species')
 
+    selecspc_index = loc['VARIABLE_SPECIES_INDEX']
+    header.set('SELECSPC', loc['SPECIES'][selecspc_index], 'Selected species')
+
     for i in range(len(loc["SPECIES"])) :
         header.set(loc["SPECIES"][i], True, 'Presence of molecule')
         ab_keyword = 'AB_{0}'.format(loc["SPECIES"][i])
-        header.set(ab_keyword, loc["ABUNDANCES"][i], 'Abundance of molecule times i [molar fraction]')
+        header.set(ab_keyword, loc["ABUNDANCES"][i], 'Abundance of molecule w.r.t. H2, log10([X]/[H2])')
         op_keyword = 'OP_{0}'.format(loc["OPACITY_FILES"][i])
         header.set(op_keyword, loc["OPACITY_FILES"][i], 'Opacity file for molecule')
 
     if 'AB_He' not in header.keys() :
-        header.set('AB_He', loc["AB_He"], 'Abundance of molecule times i [molar fraction]')
+        header.set('AB_He', loc["AB_He"], 'Abundance of molecule [molar fraction]')
 
     if 'AB_H2' not in header.keys() :
-        header.set('AB_H2', loc["AB_H2"], 'Abundance of molecule times i [molar fraction]')
+        header.set('AB_H2', loc["AB_H2"], 'Abundance of molecule [molar fraction]')
 
     header.set('PSTART', loc["P_START"], 'First value of pressure range (logscale)')
     header.set('PSTOP', loc["P_STOP"], 'Last value of pressure range (logscale)')
@@ -73,10 +76,10 @@ def save_to_fits(output, loc) :
     header.set('PNUM', loc["P_NSAMPLES"], 'Number of samples to generate')
     header.set('TMOD', loc["P-T_Model"], 'Guillot P-T model')
     #varying parameters
-    header.set('RpJup', loc['RP'], 'Planetary radius [R_jupiter]')
-    header.set('MpJup', loc['MP'] , 'Planetary mass [M_jupiter]')
-    header.set('RpCGS', loc['RP_CGS'], 'Planetary radius [cm]')
-    header.set('MpCGS', loc['MP_CGS'] , 'Planetary mass [g]')
+    header.set('RPJUP', loc['RP'], 'Planetary radius [R_jupiter]')
+    header.set('MPJUP', loc['MP'] , 'Planetary mass [M_jupiter]')
+    header.set('RPCGS', loc['RP_CGS'], 'Planetary radius [cm]')
+    header.set('MPCGS', loc['MP_CGS'] , 'Planetary mass [g]')
     header.set('GRAVITY', loc['GRAVITY_CGS'], 'Planetary gravity at R_pl [g.cm-2]')
 
     header.set('TEQ', loc['TEQ'], 'Planetary equilibrium temperature [K]')
@@ -200,7 +203,7 @@ def calculate_model(loc) :
     # Define abundances of line species and mean molecular weight of atmosphere
     for i in range(len(loc["OPACITY_FILES"])) :
         ab_percent = 10**(loc['ABUNDANCES'][i] + np.log10(loc['AB_H2']))
-        loc_abundances[loc["OPACITY_FILES"][i]] = loc['ABUNDANCES'][i] * np.ones_like(temperature)
+        loc_abundances[loc["OPACITY_FILES"][i]] = ab_percent * np.ones_like(temperature)
     # Define abundances of H2 and He and mean molecular weight of atmosphere
     loc_abundances["He"] = loc['AB_He'] * np.ones_like(temperature)
     loc_abundances["H2"] = loc['AB_H2'] * np.ones_like(temperature)
