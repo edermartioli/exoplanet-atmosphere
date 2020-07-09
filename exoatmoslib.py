@@ -16,6 +16,7 @@ __copyright__ = """
     Copyright (c) ...  All rights reserved.
     """
 
+import matplotlib.pyplot as plt
 import numpy as np
 from petitRADTRANS import Radtrans
 from petitRADTRANS import nat_cst as nc
@@ -224,6 +225,9 @@ def calculate_model(loc) :
     # create emission data vector
     loc['emission'] = atmosphere.flux / 1e-6
     
+    # create wavelength array
+    loc['wl'] = nc.c/atmosphere.freq/1e-4
+    
     return loc
 
 
@@ -302,3 +306,18 @@ def get_parameters_array(p, variables, abundance_index=0) :
 
     return p_array
 
+def plot_model(model, type="transmission") :
+    
+    if type == "transmission" :
+        plt.plot(model['wl']*1000., model['transmission'], label=model["SPECIES"])
+        plt.ylabel(r"Planet radius [R$_{\rm Jup}$]")
+    elif type == "emission" :
+        plt.plot(model['wl']*1000., model['transmission'], label=model["SPECIES"])
+        plt.ylabel(r"Planet flux [10e-6 erg cm^-2 s^-1 Hz^-1]")
+    else :
+        print("ERROR: type not supported. Choose transmission or emission")
+        exit()
+
+    plt.legend()
+    plt.xlabel(r"$\lambda$ [nm]")
+    plt.show()
