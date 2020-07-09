@@ -8,7 +8,31 @@ The following depencies should be installed:
 To generate a model spectrum using petitRADTRANS:
 
 ```
-python HD189733b_transmission.py ...
+import exoatmoslib, exoatmos_params
+import matplotlib.pyplot as plt 
+
+p = exoatmos_params.load_exoatmos_lib_parameters()
+
+# One can either use the default parameters above
+# or change some of the parameters as follows:
+# Equilibrium temperature [K]
+p['TEQ'] = 1100
+# Species for the atmospheric composition of models
+p['SPECIES'] = ['H2O', 'CO2', 'CH4', 'CO']
+# Log of relative molar fraction abundances: log([X]/[H2])
+p['ABUNDANCES'] = [-3., -6, -7.5, -3]
+# planet mass in [MJup]
+p['MP'] = 1.142
+# planet radius in [RJup]
+p['RP'] = 1.138
+
+# generate model
+model = exoatmoslib.calculate_model(p)
+
+# save model to FITS file
+exoatmoslib.save_to_fits('model_example.fits', model)
+
+plt.plot(model['wl'], model['transmission'], label=options.species)
 ```
 
 The library of models is saved in the sub-directory `Model-library`. Here we make available only a mini-version of this library to allow testing of routines to manage the library. The full library has about XX Gb and it is stored at the IAP exo-atmos server.
