@@ -3,7 +3,7 @@ Library of exoplanet atmosphere models
 
 The following depencies should be installed:
 
-`numpy`, `scipy`, `astropy`, `matplotlib`, `optparse`, `json`, `copy`, ..
+`numpy`, `scipy`, `astropy`, `matplotlib`, `optparse`, `json`, `copy`, `petitRADTRANS`, ...
 
 Below is an example to generate a model spectrum using petitRADTRANS:
 
