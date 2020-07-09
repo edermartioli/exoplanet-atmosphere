@@ -24,7 +24,11 @@ One can test access to the library by the following command:
 
 ```
 python select_model.py --db=mini-lib/db.json --teq=1100 --rp=1.14 --mp=1.14 --species=H2O --ab=-3
+```
 
+which returns the following:
+
+```
 Selected model:  /Users/eder/spirou-tools/spirou-exoatmos/mini-lib/H2O_T1100_ab-3.0_Rp1.14_Mp1.14.fits
 ```
 
