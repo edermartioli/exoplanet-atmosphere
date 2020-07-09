@@ -31,8 +31,6 @@ model = exoatmoslib.calculate_model(p)
 
 # save model to FITS file
 exoatmoslib.save_to_fits('model_example.fits', model)
-
-plt.plot(model['wl'], model['transmission'], label=options.species)
 ```
 
 The library of models is saved in the sub-directory `Model-library`. Here we make available only a mini-version of this library to allow testing of routines to manage the library. The full library has about XX Gb and it is stored at the IAP exo-atmos server.
