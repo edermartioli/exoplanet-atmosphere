@@ -463,7 +463,7 @@ def load_array_of_spirou_spectra(inputedata, rvfile="", verbose=False, plot=Fals
     return loc
 
 
-def save_spectrum_to_fits(spectrum, output) :
+def save_spectrum_to_fits(spectrum, output, wl0=0., wlf=1e50) :
 
     header = fits.Header()
     
@@ -481,6 +481,11 @@ def save_spectrum_to_fits(spectrum, output) :
     
     header.set('NORDERS', spectrum['NORDERS'], "Number of spectral orders")
     
+    if wl0 > 0 :
+        header.set('WL0', wl0, "Initial wavelength [nm]")
+    if wlf < 1e50 :
+        header.set('WLF', wlf, "Final wavelength [nm]")
+    
     header.set('TTYPE1', "WAVE")
     header.set('TUNIT1', "NM")
     
@@ -492,29 +497,35 @@ def save_spectrum_to_fits(spectrum, output) :
     
     header.set('TTYPE4', "ORDER")
     header.set('TUNIT4', "NUMBER")
-    
+
+    wlmask = ((spectrum['out_wl'] > wl0) & (spectrum['out_wl'] < wlf))
+
+    #minorder, maxorder = np.min(spectrum['out_order'][wlmask]), np.max(spectrum['out_order'][wlmask])
+    #wlmask &= spectrum['out_order'] > minorder
+    #wlmask &= spectrum['out_order'] < maxorder
+
     outhdulist = []
     
     primary_hdu = fits.PrimaryHDU(header=header)
     outhdulist.append(primary_hdu)
     
-    hdu_wl = fits.ImageHDU(data=spectrum['out_wl'], name="WAVE")
+    hdu_wl = fits.ImageHDU(data=spectrum['out_wl'][wlmask], name="WAVE")
     outhdulist.append(hdu_wl)
     
-    hdu_flux = fits.ImageHDU(data=spectrum['out_flux'], name="FLUX")
+    hdu_flux = fits.ImageHDU(data=spectrum['out_flux'][wlmask], name="FLUX")
     outhdulist.append(hdu_flux)
     
-    hdu_fluxerr = fits.ImageHDU(data=spectrum['out_fluxerr'], name="FLUXERR")
+    hdu_fluxerr = fits.ImageHDU(data=spectrum['out_fluxerr'][wlmask], name="FLUXERR")
     outhdulist.append(hdu_fluxerr)
     
-    hdu_order = fits.ImageHDU(data=spectrum['out_order'], name="ORDER")
+    hdu_order = fits.ImageHDU(data=spectrum['out_order'][wlmask], name="ORDER")
     outhdulist.append(hdu_order)
     
     mef_hdu = fits.HDUList(outhdulist)
     mef_hdu.writeto(output, overwrite=True)
 
 
-def save_spirou_spectra_to_fits(dataset, overwrite=False, verbose=False) :
+def save_spirou_spectra_to_fits(dataset, wl0=0., wlf=1e50, overwrite=False, verbose=False) :
 
     for i in range(len(dataset["input"])) :
         
@@ -529,4 +540,4 @@ def save_spirou_spectra_to_fits(dataset, overwrite=False, verbose=False) :
 
         spectrum = dataset["spectra"][i]
 
-        save_spectrum_to_fits(spectrum, output)
+        save_spectrum_to_fits(spectrum, output, wl0=wl0, wlf=wlf)
