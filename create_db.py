@@ -52,7 +52,7 @@ models = {}
 for model_file in inputdata :
     filename = os.path.basename(model_file)
     if options.verbose :
-        print("Loding model file:", filename)
+        print("Loading model file:", filename)
     models[filename] = models_lib.get_spectrum_info_from_fits(model_file)
 
 if options.verbose :
