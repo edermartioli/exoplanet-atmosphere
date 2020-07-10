@@ -259,18 +259,18 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
     for i, key in enumerate(minkey_new):
         if datastore[minkey_new[0]]['TEQ']>T_EQU:
             print('Value of T_EQU out of bounds: too small')
-            T_EQU_low_path = minkey_new[0] #called T_EQU_low_path but is actually nearest 
+            T_EQU_low_path = datastore[minkey_new[0]]["filepath"] #called T_EQU_low_path but is actually nearest 
             hdu_low=fits.open(T_EQU_low_path) #called hdu_low but is actually nearest
             break
         elif datastore[minkey_new[-1]]['TEQ']<T_EQU:
-            T_EQU_low_path = minkey_new[-1] #called T_EQU_low_path but is actually nearest
+            T_EQU_low_path = datastore[minkey_new[-1]]['filepath'] #called T_EQU_low_path but is actually nearest
             hdu_low=fits.open(T_EQU_low_path) #called hdu_low but is actually nearest
             print('Value of T_EQU out of bounds: too big')
             break
         elif datastore[key]['TEQ']>T_EQU:
-            T_EQU_upp_path = key
+            T_EQU_upp_path = datastore[key]['filepath']
             T_EQU_upp = datastore[T_EQU_upp_path]['TEQ']
-            T_EQU_low_path = minkey_new[i-1]
+            T_EQU_low_path = datastore[minkey_new[i-1]]['filepath']
             T_EQU_low = datastore[T_EQU_low_path]['TEQ']
             hdu_low=fits.open(T_EQU_low_path)
             hdu_upp=fits.open(T_EQU_upp_path)
