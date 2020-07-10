@@ -3,7 +3,12 @@
 """
     Created on July 6 2020
     
-    Description: This routine selects the exoplanet atmosphere model closest to the input parameters: Teq, Rp, Mp, Abundances..
+    Description: This routine shows an example on how to obtain an exoplanet atmosphere model
+                 from our exoatmos library given the input parameters: Teq, Rp, Mp, abundance, species.
+                 One can use either the nearest approach, which select an existing model with
+                 parameters closest to the input parameters, or one can use interpolated models,
+                 which gets the closest Rp, Mp, and abundances, and performs a linear interpolation
+                 between the two closest Teq values.
     
     @author: Eder Martioli <martioli@iap.fr>
     
