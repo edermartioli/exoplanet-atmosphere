@@ -269,9 +269,9 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
             break
         elif datastore[key]['TEQ']>T_EQU:
             T_EQU_upp_path = datastore[key]['filepath']
-            T_EQU_upp = datastore[T_EQU_upp_path]['TEQ']
+            T_EQU_upp = datastore[key]['TEQ']
             T_EQU_low_path = datastore[minkey_new[i-1]]['filepath']
-            T_EQU_low = datastore[T_EQU_low_path]['TEQ']
+            T_EQU_low = datastore[minkey_new[i-1]]['TEQ']
             hdu_low=fits.open(T_EQU_low_path)
             hdu_upp=fits.open(T_EQU_upp_path)
             model_interp_transm = interpolate_model_linear(hdu_low[1].data, hdu_upp[1].data, T_EQU_low, T_EQU_upp, T_EQU)
