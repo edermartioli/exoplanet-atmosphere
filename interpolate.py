@@ -68,7 +68,7 @@ def interpolate_model_linear(y1, y2, T1, T2, T_EQU):
     model_interp = griddata(points, bounds, (T_EQU), method='linear')
     return model_interp
 
-def interpolate_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., wlmax=2500.) :
+def interpolate_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., wlmax=2500., fast_mode=True) :
     """
         Get file path of best model in input database
         
@@ -142,18 +142,18 @@ def interpolate_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., wlmax
     
     # create wavelength array
     wl = np.geomspace(wl_0*1000., wl_f*1000., wl_num)
-    
     wlmask = np.where(np.logical_and(wl > wlmin, wl < wlmax))
     loc = get_spectrum_info_from_fits(T_EQU_low_path)  
-    loc['wl'] = wl[wlmask]
+    
     loc['TEQ'] = T_EQU
 
     if "TRANSMISSION" in hdu_low :
         transmission = model_interp_transm
         loc['transmission'] = transmission[wlmask]
     
-    if "EMISSION" in hdu_low :
+    if "EMISSION" in hdu_low and fast_mode==False:
         emission = model_interp_emiss
         loc['emission'] = emission[wlmask]
+        loc['wl'] = wl[wlmask]
 
     return loc
