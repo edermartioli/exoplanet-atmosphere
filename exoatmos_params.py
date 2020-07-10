@@ -49,9 +49,9 @@ def load_exoatmos_lib_parameters(libdir="", variable_parameters=False) :
     
     ######### CHEMICAL COMPOSITION #############
     # Define abundance of Helium
-    p['AB_He'] = 0.24
+    p['AB_He'] = 0.17
     # Define abundance of H2
-    p['AB_H2'] = 0.74
+    p['AB_H2'] = 0.80
     
     # Whether or not to generate separate models for each species
     p['SEPARATE_SPECIES'] = True
