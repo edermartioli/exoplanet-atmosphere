@@ -40,7 +40,7 @@ def load_exoatmos_lib_parameters(libdir="", variable_parameters=False) :
     # Equilibrium temperature [K]
     # For ranges insert 3 values: [ini, end, nsamples]
     if variable_parameters :
-        p['TEQ'] = [500, 2500, 20]
+        p['TEQ'] = [500, 2500, 21]
     else :
         # For constant temperature insert a single value: Teq
         p['TEQ'] = 1100
@@ -60,7 +60,7 @@ def load_exoatmos_lib_parameters(libdir="", variable_parameters=False) :
     p['SPECIES'] = ['H2O']
     # Log of molar fraction abundances: log([X]/[H2])
     if variable_parameters :
-        p['ABUNDANCES'] = [[-8,-2,12]]
+        p['ABUNDANCES'] = [[-8,-2,13]]
     else :
         p['ABUNDANCES'] = [-3.5]
     #############################################
