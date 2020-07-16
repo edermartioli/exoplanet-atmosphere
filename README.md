@@ -1,9 +1,15 @@
 # exoplanet-atmosphere
 
 Welcome to the exoatmos_lib GitHub page. 
-This READ.ME file will serve as a small documentation, and the Python files needed to generate and use the library  of exoplanet atmosphere models are present above. 
+This README file will serve as a small documentation, and the Python files needed to generate and use the library  of exoplanet atmosphere models are present above. 
 
-The exoatmos_lib library consists of modelled transmission and emission spectra of exoplanets, for clear atmospheres, for modulable ranges of equilibrium temperature, presence and abundance of molecular species, planetary radius and mass. 
+The exoatmos_lib library consists of modelled transmission and emission spectra of exoplanets, for clear atmospheres, for modulable ranges of equilibrium temperature, presence and abundance of molecular species, planetary radius and mass. The spectra in the library are of high (λ/Δλ=10^6) resolution and are modelled using the `petitRADTRANS` package.
+
+This GitHub page contains the following: 
+- mini-lib: folder containing 9 FITS files (with both transmission and emission spectra data inside) modelled in low resolution mode (or 'c-k' mode of (λ/Δλ=1000)).
+- mini-lib_lbl: folder containing 9 FITS files (with both transmission and emission spectra data inside) modelled in high resolution mode (or 'lbl' mode of (λ/Δλ=10^6)).
+
+
 
 GUIDE:
 The following depencies should be installed:
