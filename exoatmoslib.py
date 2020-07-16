@@ -292,7 +292,7 @@ def get_parameters_array(p, variables, abundance_index=0) :
             for rp in rp_array :
                 for mp in mp_array :
                     p_loc = deepcopy(p)
-                    output = "{0}/{1}_T{2:.0f}_ab{3:.2f}_Rp{4:.3f}_Mp{5:.3f}.fits".format(p['LIBDIR'],p['SPECIES'][abundance_index],T_equ,ab,rp,mp)
+                    output = "{0}/{1}_T{2:04d}_ab{3:.2f}_Rp{4:.3f}_Mp{5:.3f}.fits".format(p['LIBDIR'],p['SPECIES'][abundance_index],int(T_equ),ab,rp,mp)
                     p_loc['FILENAME'] = output
                     
                     p_loc['TEQ'] = T_equ
