@@ -46,9 +46,9 @@ The following routine generates a library called "mini-lib" of models using the 
 python generate_library.py --libdir=./mini-lib/
 ```
 
-Here we make a mini-version of the library available, to allow for testing of routines to manage the library. 
+Mini-versions of the library mini-lib.py and mini-lib_lbl.py were made available here to allow for testing of routines to manage the library. 
 
-One can test access to the mini-library by the following command:
+One can test access to the mini-library mini-lib.py by the following command:
 
 ```
 python select_model.py --db=mini-lib/db.json --teq=1132 --ab=-3.4 --rp=1.25 --mp=1.81 --species='H2O' -vn
