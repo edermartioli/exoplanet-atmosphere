@@ -1,11 +1,13 @@
 # exoplanet-atmosphere
 
 Welcome to the exoatmos_lib GitHub page! 
+
 This README file will serve as a small documentation, and the Python files needed to generate and use the library  of exoplanet atmosphere models are present above. 
 
 The exoatmos_lib library consists of modelled transmission and emission spectra of exoplanets, for clear atmospheres, for modulable ranges of equilibrium temperature, presence and abundance of molecular species, planetary radius and mass. The spectra in the library are of high (λ/Δλ=10^6) resolution and are modelled using the `petitRADTRANS` package.
 
 This GitHub page contains the following: 
+
 - mini-lib: folder containing 9 FITS files (with both transmission and emission spectra data inside) modelled in low resolution mode (or 'c-k' mode of (λ/Δλ=1000)).
 - mini-lib_lbl: folder containing 9 FITS files (with both transmission and emission spectra data inside) modelled in high resolution mode (or 'lbl' mode of (λ/Δλ=10^6)).
 - create_db.py: Python code that must be run after downloading any of the libraries (mini-lib, mini-lib_lbl, or exoatmos_lib) to redefine local path of files in the `db.json` file present in each one of these libraries. 
@@ -20,8 +22,11 @@ This GitHub page contains the following:
 - spirou_export_1D_spectrum.py: 
 - spiroulib.py: 
 
+Disk spaces needed are as follows: [...] for the content of this GitHub page, [...] for the full scale library, 4.3 Gb for the opacity files in c-k mode, and 240 Gb for the opacity files in lbl mode. Opacity files and installation of `petitRADTRANS` are available at https://petitradtrans.readthedocs.io/en/latest/. 
+
 
 GUIDE to simple use:
+
 The following depencies should be installed:
 
 `numpy`, `scipy`, `astropy`, `matplotlib`, `optparse`, `json`, `copy`, `petitRADTRANS`, `glob`, `os, sys`.
