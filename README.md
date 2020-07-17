@@ -22,7 +22,7 @@ This GitHub page contains the following:
 - spirou_export_1D_spectrum.py: 
 - spiroulib.py: 
 
-Disk space needed is as follows: [...] for the content of this GitHub page, [...] for the full scale library, 4.3 Gb for the opacity files in c-k mode, and 240 Gb for the opacity files in lbl mode. Opacity files and installation of `petitRADTRANS` are available at https://petitradtrans.readthedocs.io/en/latest/. 
+Disk space needed is as follows: 140.0 Mb for the content of this GitHub page, [...] for the full scale library, 4.3 Gb for the opacity files in c-k mode, and 240 Gb for the opacity files in lbl mode. Opacity files and installation of `petitRADTRANS` are available at https://petitradtrans.readthedocs.io/en/latest/. 
 
 Note that the full scale library `exoatmos_lib` as it is defined in exoatmos_params_full-lib.py takes around 8 hours to run per molecule. 
 
