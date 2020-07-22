@@ -36,7 +36,7 @@ The following depencies should be installed:
 Below is an example to generate and plot a model spectrum using petitRADTRANS:
 
 ```
-python generate_spectrum.py --output='H2O_T1100_ab-3.5_Rp1.14_Mp1.14.fits' --teq=1100 --rp=1.14 --mp=1.14 --species='H2O CO2 CH4 CO' --abundances="-3. -6 -7.5 -3" -p
+python generate_spectrum.py --output='H2O_CO2_CH4_CO_T1100_ab-3.0_-6.0_-7.5_-3.0_Rp1.14_Mp1.14.fits' --teq=1100 --rp=1.14 --mp=1.14 --species='H2O CO2 CH4 CO' --abundances="-3. -6 -7.5 -3" -p
 ```
 ![Alt text](Figures/generate_spectrum_example.png?raw=true "Title")
 
