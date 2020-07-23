@@ -76,9 +76,9 @@ for i in range(len(ab_strings)) :
 p['ABUNDANCES'] = abundances
 
 # planet mass in [MJup]
-p['MP'] = float(options.rp)
+p['MP'] = float(options.mp)
 # planet radius in [RJup]
-p['RP'] = float(options.mp)
+p['RP'] = float(options.rp)
 
 # generate model
 model = exoatmoslib.calculate_model(p)
