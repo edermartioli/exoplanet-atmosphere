@@ -14,13 +14,13 @@ This GitHub page contains the following:
 - exoatmos_params.py: Python file where input parameters can be changed. Now set to parameters that represent best object HD 189733 b. 
 - exoatmos_params_full-lib.py: Python file where input parameters can be changed. Now set to values that represent best an average Hot Jupiter planet. 
 - exoatmoslib.py: Python file containing functions useful to the calculation of the library. 
-- exoplanetlib.py: Python library for exoplanetary quantities.
+- exoplanetlib.py: Python library for exoplanetary quantities (placeholder for on-going work).
 - generate_library.py: Python file used to generate library, as a function of the input parameters given in Python file called exoatmos_params.py
 - generate_spectrum.py: Python file used to generate individual spectrum fo the library. 
 - models_lib.py: Python file containing functions useful to the calculation of the library. 
 - select_models.py: Python file used to select nearest entry of the library or interpolate, as a function of the input parameters given in Python file called exoatmos_params.py and the options given in the command line. 
-- spirou_export_1D_spectrum.py: Python routine that reads SPIRou reduced spectra and exports the data to 1D spectrum in FITS format, suitable for the trasmission spectroscopy analysis.
-- spiroulib.py: Python library for handling SPIRou data
+- spirou_export_1D_spectrum.py: Python routine that reads SPIRou reduced spectra and exports the data to 1D spectrum in FITS format, suitable for the trasmission spectroscopy analysis (placeholder for on-going work).
+- spiroulib.py: Python library for handling SPIRou data (placeholder for on-going work).
 
 Disk space needed is as follows: 140.0 Mb for the content of this GitHub page, 20.65 Gb for the full scale library, 4.3 Gb for the opacity files in c-k mode, and 240 Gb for the opacity files in lbl mode. Opacity files and installation of `petitRADTRANS` are available at https://petitradtrans.readthedocs.io/en/latest/. 
 
