@@ -62,11 +62,13 @@ Selected model:  mini-lib/H2O_T1100_ab-3.00_Rp1.138_Mp1.142.fits
 
 ![Alt text](Figures/select_model_H2O.png?raw=true "Title")
 
-Transmission and emission spectra present in the library and produced with `petitRADTRANS` look like the following two spectra (please note that the spectra are generated in lbl mode). The transmission spectrum has the transit radius as its y-axis quantity, as it is a good parameter to measure transmission: as transmission increases, the atmosphere is more transparent, and so the visible radius of the planet + atmosphere decreases. By having the wavelength on the x-axis, one can quickly see at which values of wavelegnth the transmission is more prominent or not, thus making it easier to characterise the atmosphere. The positive slope of the graph is due to the continuum absorption of the most abundant species, here: hydrogen and helium.
+Transmission and emission spectra present in the library and produced with `petitRADTRANS` look like the following two spectra (please note that the spectra are generated in lbl mode). 
+
+The transmission spectrum has the transit radius as its y-axis quantity, as it is a good parameter to measure transmission: as transmission increases, the atmosphere is more transparent, and so the visible radius of the planet + atmosphere decreases. By having the wavelength on the x-axis, one can quickly see at which values of wavelegnth the transmission is more prominent or not, thus making it easier to characterise the atmosphere. The positive slope of the graph is due to the continuum absorption of the most abundant species, here: hydrogen and helium. An example transmission spectrum can be seen below: 
 
 ![Alt text](Figures/Transmission_lbl.png?raw=true "Title")
 
-The emission spectrum has the quantity of planetary flux on its y-axis, to be able to study the contribution of light from the planet only. It also possesses wavelength on its x-axis, to be able to retrieve the contribution of different chemical molecules. The slight in slope in the graph is due to the emitted temperature of blackbody radiation, which makes the planetary flux increase with increasing wavelength.
+The emission spectrum has the quantity of planetary flux on its y-axis, to be able to study the contribution of light from the planet only. It also possesses wavelength on its x-axis, to be able to retrieve the contribution of different chemical molecules. The slight in slope in the graph is due to the emitted temperature of blackbody radiation, which makes the planetary flux increase with increasing wavelength. An example emission spectrum can be seen below:
 
 ![Alt text](Figures/Emission_lbl.png?raw=true "Title")
 
