@@ -68,7 +68,7 @@ The transmission spectrum has the transit radius as its y-axis quantity, as it i
 
 ![Alt text](Figures/Transmission_lbl.png?raw=true "Title")
 
-The emission spectrum has the quantity of planetary flux on its y-axis, to be able to study the contribution of light from the planet only. It also possesses wavelength on its x-axis, to be able to retrieve the contribution of different chemical molecules. The slight increase in slope in the graph is due to the emitted temperature of blackbody radiation, which makes the planetary flux increase with increasing wavelength. An example emission spectrum can be seen below:
+The emission spectrum has the quantity of planetary flux on its y-axis, to be able to study the contribution of light from the planet only. It also possesses wavelength on its x-axis, to be able to retrieve the contribution of different chemical molecules. The slight increase in slope in the graph is due to the emitted temperature of black-body radiation, which makes the planetary flux increase with increasing wavelength. An example emission spectrum can be seen below:
 
 ![Alt text](Figures/Emission_lbl.png?raw=true "Title")
 
