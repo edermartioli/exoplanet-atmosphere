@@ -33,7 +33,7 @@ The following depencies should be installed:
 
 `numpy`, `scipy`, `astropy`, `matplotlib`, `optparse`, `json`, `copy`, `petitRADTRANS`, `glob`, `os, sys`.
 
-Below is an example to generate and plot a model spectrum using petitRADTRANS:
+Below is an example to generate and plot a model spectrum using petitRADTRANS (please note that the spectrum is generated in c-k mode):
 
 ```
 python generate_spectrum.py --output='H2O_CO2_CH4_CO_T1100_ab-3.0_-6.0_-7.5_-3.0_Rp1.14_Mp1.14.fits' --teq=1100 --rp=1.14 --mp=1.14 --species='H2O CO2 CH4 CO' --abundances="-3. -6 -7.5 -3" -p
@@ -62,9 +62,11 @@ Selected model:  mini-lib/H2O_T1100_ab-3.00_Rp1.138_Mp1.142.fits
 
 ![Alt text](Figures/select_model_H2O.png?raw=true "Title")
 
-Transmission and emission spectra present in the library and produced with `petitRADTRANS` look like the following: 
+Transmission and emission spectra present in the library and produced with `petitRADTRANS` look like the following two spectra (please note that the spectra are generated in lbl mode). The transmission spectrum has the transit radius as its y-axis quantity, as it is a good parameter to measure transmission: as transmission increases, the atmosphere is more transparent, and so the visible radius of the planet + atmosphere decreases. By having the wavelength on the x-axis, one can quickly see at which values of wavelegnth the transmission is more prominent or not, thus making it easier to characterise the atmosphere. The positive slope of the graph is due to the continuum absorption of the most abundant species, here: hydrogen and helium.
 
 ![Alt text](Figures/Transmission_lbl.png?raw=true "Title")
+
+The emission spectrum has the quantity of planetary flux on its y-axis, to be able to study the contribution of light from the planet only. It also possesses wavelength on its x-axis, to be able to retrieve the contribution of different chemical molecules. The slight in slope in the graph is due to the emitted temperature of blackbody radiation, which makes the planetary flux increase with increasing wavelength.
 
 ![Alt text](Figures/Emission_lbl.png?raw=true "Title")
 
