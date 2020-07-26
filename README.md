@@ -14,7 +14,7 @@ This GitHub page contains the following:
 - exoatmos_params.py: Python file where input parameters can be changed. Now set to parameters that represent best object HD 189733 b. 
 - exoatmos_params_full-lib.py: Python file where input parameters can be changed. Now set to values that represent best an average Hot Jupiter planet. 
 - exoatmoslib.py: Python file containing functions useful to the calculation of the library. 
-- exoplanetlib.py: 
+- exoplanetlib.py: Python library for exoplanetary quantities.
 - generate_library.py: Python file used to generate library, as a function of the input parameters given in Python file called exoatmos_params.py
 - generate_spectrum.py: Python file used to generate individual spectrum fo the library. 
 - models_lib.py: Python file containing functions useful to the calculation of the library. 
