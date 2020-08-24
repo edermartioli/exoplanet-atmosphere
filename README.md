@@ -45,7 +45,7 @@ The following routine generates a library called "mini-lib" of models using the 
 python generate_library.py --libdir=./mini-lib/
 ```
 
-Mini-versions of the library mini-lib.py and mini-lib_lbl.py were made available here to allow for testing of routines to manage the library. 
+Mini-versions of the library `mini-lib` and `mini-lib_lbl` were made available here to allow for testing of routines to manage the library. 
 
 One can test access to the mini-library mini-lib.py by the following command:
 
