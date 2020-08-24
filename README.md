@@ -2,7 +2,7 @@
 
 Welcome to the exoatmos_lib GitHub page! 
 
-This README file will serve as a small documentation on how to use the Python files needed to generate and use the library  of exoplanet atmosphere models present above. 
+This README file is a quick tutorial on how to generate the library of exoplanet atmosphere models using the Python codes provided in this repository. 
 
 The exoatmos_lib library consists of modelled transmission and emission spectra of exoplanets, for clear atmospheres, and modulable ranges of equilibrium temperature, presence and abundance of molecular species, planetary radius, and planetary mass. The full library `exoatmos_lib` is stored on the IAP (Institut d'Astrophysique de Paris) `exoatmos` server at the filepath `/mnt/globalNS/tmp/bessette/exoatmos_lib/`.The spectra in this library are of high resolution and are modelled using the `petitRADTRANS` package. This package offers two resolution modes: the low resolution mode (or 'c-k' mode of (λ/Δλ=1000)), and the high resolution mode (or 'lbl' mode of (λ/Δλ=10^6)). 
 
@@ -10,22 +10,21 @@ This GitHub page contains the following:
 
 - mini-lib: folder containing 9 FITS files of transmission and emission spectra modelled in 'c-k' mode.
 - mini-lib_lbl: folder containing 9 FITS files of transmission and emission spectra modelled in 'lbl' mode.
-- create_db.py: Python file that must be run after downloading any of the libraries (`mini-lib`, `mini-lib_lbl`, or `exoatmos_lib`) are downloaded, to redefine local path of files in the `db.json` file present in each these libraries. 
-- exoatmos_params.py: Python file where input parameters can be changed. Now set to parameters that represent best object HD 189733 b. 
-- exoatmos_params_full-lib.py: Python file where input parameters can be changed. Now set to values that represent best an average Hot Jupiter planet. 
+- create_db.py: Python file that must be run after downloading any of the libraries (`mini-lib`, `mini-lib_lbl`, or `exoatmos_lib`) to redefine local path of files in the database `db.json`. 
+- exoatmos_params.py: Python file where input parameters can be changed. By default parameters are set to those representing the exoplanet HD 189733 b. 
+- exoatmos_params_full-lib.py: Python file where input parameters can be changed. Here the parameters are set to those representing an average Hot Jupiter planet. 
 - exoatmoslib.py: Python file containing functions useful to the calculation of the library. 
 - exoplanetlib.py: Python library for exoplanetary quantities (placeholder for on-going work).
 - generate_library.py: Python file used to generate library, as a function of the input parameters given in Python file called exoatmos_params.py
-- generate_spectrum.py: Python file used to generate individual spectrum fo the library. 
+- generate_spectrum.py: Python file used to generate an individual spectrum of the library. 
 - models_lib.py: Python file containing functions useful to the calculation of the library. 
 - select_models.py: Python file used to select nearest entry of the library or interpolate, as a function of the input parameters given in Python file called exoatmos_params.py and the options given in the command line. 
-- spirou_export_1D_spectrum.py: Python routine that reads SPIRou reduced spectra and exports the data to 1D spectrum in FITS format, suitable for the trasmission spectroscopy analysis (placeholder for on-going work).
+- spirou_export_1D_spectrum.py: Python routine that reads SPIRou reduced spectra and exports the data to 1D spectrum in FITS format, suitable for the transmission spectroscopy analysis (placeholder for on-going work).
 - spiroulib.py: Python library for handling SPIRou data (placeholder for on-going work).
 
 Disk space needed is as follows: 140.0 Mb for the content of this GitHub page, 20.65 Gb for the full scale library, 4.3 Gb for the opacity files in c-k mode, and 240 Gb for the opacity files in lbl mode. Opacity files and installation of `petitRADTRANS` are available at https://petitradtrans.readthedocs.io/en/latest/. 
 
 Note that the full scale library `exoatmos_lib` as it is defined in exoatmos_params_full-lib.py takes around 9.5 hours to run per molecule. 
-
 
 GUIDE to simple use:
 
