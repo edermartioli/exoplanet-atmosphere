@@ -85,26 +85,23 @@ def get_best_model_file(modeldb, T_EQU=1100, AB=-4, R_PL=1.25, M_PL=1.81, specie
 
     # loop over all entried in the database to get best matched model file
     for key in datastore.keys() :
-        
         if species == 'all' :
             ab_key = 'AB_{0}'.format(datastore[key]['SELECSPC'])
         else :
             ab_key = 'AB_{0}'.format(species)
-
-        d_T_EQU = np.abs(datastore[key]['TEQ'] - T_EQU)
-        d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
-        d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
     
         if ab_key in datastore[key].keys() :
+
+            d_T_EQU = np.abs(datastore[key]['TEQ'] - T_EQU)
             d_ab = np.abs(datastore[key][ab_key] - AB)
-        else :
-            d_ab = mind_ab+1  # when the key doesn't exist
+            d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
+            d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
     
-        if d_T_EQU <= mind_T_EQU and d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
-            mind_T_EQU = d_T_EQU
-            mind_ab = d_ab
-            mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
-            minkey = key
+            if d_T_EQU <= mind_T_EQU and d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
+                mind_T_EQU = d_T_EQU
+                mind_ab = d_ab
+                mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
+                minkey = key
 
     # return best model file path
     return datastore[minkey]['filepath']
@@ -243,39 +240,34 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
         else :
             ab_key = 'AB_{0}'.format(species)
     
-        d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
-        d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
-        
         if ab_key in datastore[key].keys() :
             d_ab = np.abs(datastore[key][ab_key] - AB)
-        else :
-            d_ab = mind_ab+1  # when the key doesn't exist
+            d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
+            d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
+    
+            if d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
+                mind_ab = d_ab
+                mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
+                minkey = key
 
-        if d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
-            mind_ab = d_ab
-            mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
-            minkey = key
-
-    ab_key = 'AB_'+species
+    ab_key = 'AB_{0}'.format(species)
     if ab_key in datastore[minkey].keys() :
         nearest_ab = datastore[minkey][ab_key]
+        nearest_R_PL = np.around(datastore[minkey]['RPJUP'],3)
+        nearest_M_PL = np.around(datastore[minkey]['MPJUP'],3)
     
-    nearest_R_PL = np.around(datastore[minkey]['RPJUP'],3)
-    nearest_M_PL = np.around(datastore[minkey]['MPJUP'],3)
-    
-    minkey_new=[]
-    for key in datastore.keys():
-        if ab_key in datastore[key].keys() :
-            if datastore[key][ab_key] == nearest_ab and np.around(datastore[key]['RPJUP'],3) == nearest_R_PL and np.around(datastore[key]['MPJUP'],3) == nearest_M_PL:
+        minkey_new=[]
+        for key in datastore.keys():
+            if datastore[key]['AB_'+species] == nearest_ab and np.around(datastore[key]['RPJUP'],3) == nearest_R_PL and np.around(datastore[key]['MPJUP'],3) == nearest_M_PL:
                 minkey_new.append(key)
-
-    for i, key in enumerate(minkey_new):
-        if datastore[key]['TEQ']>T_EQU:
-            T_EQU_upp_path = key
-            T_EQU_upp = datastore[T_EQU_upp_path]['TEQ']
-            T_EQU_low_path = minkey_new[i-1]
-            T_EQU_low = datastore[T_EQU_low_path]['TEQ']
-            break
+    
+        for i, key in enumerate(minkey_new):
+            if datastore[key]['TEQ']>T_EQU:
+                T_EQU_upp_path = key
+                T_EQU_upp = datastore[T_EQU_upp_path]['TEQ']
+                T_EQU_low_path = minkey_new[i-1]
+                T_EQU_low = datastore[T_EQU_low_path]['TEQ']
+                break
 
     hdu_low=fits.open(T_EQU_low_path)
     hdu_upp=fits.open(T_EQU_upp_path)
