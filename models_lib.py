@@ -220,13 +220,14 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
         :return loc: dictionary with interpolated results
         """
 
-    print(np.floor(float(T_EQU)),np.ceil(float(T_EQU)), T_EQU)
-    T_EQU_low_path = get_best_model_file(modeldb, T_EQU=np.floor(float(T_EQU)), AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
-    T_EQU_upp_path = get_best_model_file(modeldb, T_EQU=np.ceil(float(T_EQU)), AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
+    T_EQU_low = np.floor(float(T_EQU)/100.)*100
+    T_EQU_upp = np.ceil(float(T_EQU)/100.)*100
+    
+    T_EQU_low_path = get_best_model_file(modeldb, T_EQU=T_EQU_low, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
+    T_EQU_upp_path = get_best_model_file(modeldb, T_EQU=T_EQU_upp, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
 
     hdu_low=fits.open(T_EQU_low_path)
     hdu_upp=fits.open(T_EQU_upp_path)
-    
     
     if hdu_low[0].header['TEQ'] == T_EQU or T_EQU_low_path == T_EQU_upp_path:
         loc = load_spectrum_from_fits(T_EQU_low_path, wlmin=wlmin, wlmax=wlmax, normalize=False)
