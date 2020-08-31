@@ -206,6 +206,7 @@ def interpolate_model_linear(y1, y2, T1, T2, T_EQU):
     return model_interp
 
 
+
 def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., wlmax=2500., return_wl=False, return_emission=False) :
     """
         Get file path of best model in input database
@@ -219,92 +220,50 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
         :return loc: dictionary with interpolated results
         """
 
-    # load json database file containig all models in the library
-    try :
-        with open(modeldb, 'r') as f:
-            datastore = json.load(f)
-    except :
-        print("ERROR: could not open models database file ",modeldb)
-        exit()
-
-    mind_ab = 1.e20
-    mind_R_PL, mind_M_PL = 1.e20, 1.e20
-
-    minkey = None
-
-    # loop over all entried in the database to get best matched model file
-    for key in datastore.keys() :
-        
-        if species == 'all' :
-            ab_key = 'AB_{0}'.format(datastore[key]['SELECSPC'])
-        else :
-            ab_key = 'AB_{0}'.format(species)
-    
-        if ab_key in datastore[key].keys() :
-            d_ab = np.abs(datastore[key][ab_key] - AB)
-            d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
-            d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
-    
-            if d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
-                mind_ab = d_ab
-                mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
-                minkey = key
-
-    ab_key = 'AB_{0}'.format(species)
-    if ab_key in datastore[minkey].keys() :
-        nearest_ab = datastore[minkey][ab_key]
-        nearest_R_PL = np.around(datastore[minkey]['RPJUP'],3)
-        nearest_M_PL = np.around(datastore[minkey]['MPJUP'],3)
-    
-        minkey_new=[]
-        for key in datastore.keys():
-            if ab_key in datastore[key].keys() :
-                if datastore[key][ab_key] == nearest_ab and np.around(datastore[key]['RPJUP'],3) == nearest_R_PL and np.around(datastore[key]['MPJUP'],3) == nearest_M_PL:
-                    minkey_new.append(key)
-    
-        for i, key in enumerate(minkey_new):
-            if datastore[key]['TEQ']>T_EQU:
-                T_EQU_upp_path = key
-                T_EQU_upp = datastore[T_EQU_upp_path]['TEQ']
-                T_EQU_low_path = minkey_new[i-1]
-                T_EQU_low = datastore[T_EQU_low_path]['TEQ']
-                break
+    T_EQU_low_path = get_best_model_file(modeldb, T_EQU=np.floor(float(T_EQU)), AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
+    T_EQU_upp_path = get_best_model_file(modeldb, T_EQU=np.ceil(float(T_EQU)), AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
 
     hdu_low=fits.open(T_EQU_low_path)
     hdu_upp=fits.open(T_EQU_upp_path)
-    model_interp_transm = interpolate_model_linear(hdu_low[1].data, hdu_upp[1].data, T_EQU_low, T_EQU_upp, T_EQU)
-    if return_emission :
-        model_interp_emiss = interpolate_model_linear(hdu_low[2].data, hdu_upp[2].data, T_EQU_low, T_EQU_upp, T_EQU)
+    
+    if hdu_low[0].header['TEQ'] == T_EQU or T_EQU_low_path == T_EQU_upp_path:
+        loc = load_spectrum_from_fits(T_EQU_low_path, wlmin=wlmin, wlmax=wlmax, normalize=False)
+        loc['TEQ'] = T_EQU
+        loc['T_EQU_low_path'] = T_EQU_low_path
+        loc['T_EQU_upp_path'] = T_EQU_upp_path
 
-    hdr = hdu_low[0].header
-    wl_0 = hdr["CRVAL1"]
-    wl_f = hdr["CRVALEND"]
-    wl_step = hdr["CDELT1"]
-    wl_num = len(hdu_low["TRANSMISSION"].data)
+    else :
+        model_interp_transm = interpolate_model_linear(hdu_low[1].data, hdu_upp[1].data, T_EQU_low, T_EQU_upp, T_EQU)
+        if return_emission :
+            model_interp_emiss = interpolate_model_linear(hdu_low[2].data, hdu_upp[2].data, T_EQU_low, T_EQU_upp, T_EQU)
 
-    loc = get_spectrum_info_from_fits(T_EQU_low_path)
+        hdr = hdu_low[0].header
+        wl_0 = hdr["CRVAL1"]
+        wl_f = hdr["CRVALEND"]
+        wl_step = hdr["CDELT1"]
+        wl_num = len(hdu_low["TRANSMISSION"].data)
 
-    loc['T_EQU_low_path'] = T_EQU_low_path
-    loc['T_EQU_upp_path'] = T_EQU_upp_path
-    loc['TEQ'] = T_EQU
+        loc = get_spectrum_info_from_fits(T_EQU_low_path)
 
-    if return_wl :
-        # create wavelength array
-        wl = np.geomspace(wl_0*1000., wl_f*1000., wl_num)
-        wlmask = np.where(np.logical_and(wl > wlmin, wl < wlmax))
-        loc['wl'] = wl[wlmask]
+        loc['T_EQU_low_path'] = T_EQU_low_path
+        loc['T_EQU_upp_path'] = T_EQU_upp_path
+        loc['TEQ'] = T_EQU
 
-    if "TRANSMISSION" in hdu_low :
-        transmission = model_interp_transm
-        loc['transmission'] = transmission[wlmask]
+        if return_wl :
+            # create wavelength array
+            wl = np.geomspace(wl_0*1000., wl_f*1000., wl_num)
+            wlmask = np.where(np.logical_and(wl > wlmin, wl < wlmax))
+            loc['wl'] = wl[wlmask]
 
-    if "EMISSION" in hdu_low and return_emission :
-        emission = model_interp_emiss
-        loc['emission'] = emission[wlmask]
+        if "TRANSMISSION" in hdu_low :
+            transmission = model_interp_transm
+            loc['transmission'] = transmission[wlmask]
 
+        if "EMISSION" in hdu_low and return_emission :
+            emission = model_interp_emiss
+            loc['emission'] = emission[wlmask]
 
     return loc
-
 
 """
 def calculate_model(modeldb, observed_wl, resolution=0., teff=5777., logg=4.4374, feh=0.0, normalize=False) :
