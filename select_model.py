@@ -42,6 +42,7 @@ parser.add_option("-0", "--wl0", dest="wl0", help="Start wavelength",type='strin
 parser.add_option("-f", "--wlf", dest="wlf", help="Final wavelength",type='string',default='2500.')
 parser.add_option("-v", action="store_true", dest="verbose", help="verbose", default=False)
 parser.add_option("-n", action="store_true", dest="nearest", help="Get nearest model instead of interpolation in Teq", default=False)
+parser.add_option("-p", action="store_true", dest="plot", help="Plot selected spectrum", default=False)
 
 try:
     options,args = parser.parse_args(sys.argv[1:])
@@ -67,9 +68,10 @@ else :
     model = models_lib.get_interpolated_model(options.db, T_EQU=float(options.teq), AB=float(options.ab), R_PL=float(options.rp), M_PL=float(options.mp), species=options.species, wlmin=float(options.wl0), wlmax=float(options.wlf), return_wl=True, return_emission=False)
     print("Model calculated by linear interpolation of the following selected models: ", model['T_EQU_low_path'],"and", model['T_EQU_upp_path'])
 
-plt.plot(model['wl'], model['transmission'], label=options.species)
-plt.legend()
-plt.xlabel(r"wavelength (nm)")
-plt.ylabel(r"transit radius R$_{\rm Jup}$")
-#plt.ylabel(r"relative transmission")
-plt.show()
+if options.plot :
+    plt.plot(model['wl'], model['transmission'], label=options.species)
+    plt.legend()
+    plt.xlabel(r"wavelength (nm)")
+    plt.ylabel(r"transit radius R$_{\rm Jup}$")
+    #plt.ylabel(r"relative transmission")
+    plt.show()
