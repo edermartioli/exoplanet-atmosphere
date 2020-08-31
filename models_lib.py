@@ -223,16 +223,16 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
     T_EQU_low = np.floor(float(T_EQU)/100.)*100.
     T_EQU_upp = np.ceil(float(T_EQU)/100.)*100.
     
-    print(T_EQU,T_EQU_low,T_EQU_upp)
-    
     T_EQU_low_path = get_best_model_file(modeldb, T_EQU=T_EQU_low, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
-    print("T_EQU_low_path=",T_EQU_low_path)
+
     T_EQU_upp_path = get_best_model_file(modeldb, T_EQU=T_EQU_upp, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
-    print("T_EQU_upp_path=",T_EQU_upp_path)
 
     hdu_low=fits.open(T_EQU_low_path)
     hdu_upp=fits.open(T_EQU_upp_path)
     
+    T_EQU_low = hdu_low[0].header['TEQ']
+    T_EQU_upp = hdu_upp[0].header['TEQ']
+
     if hdu_low[0].header['TEQ'] == T_EQU or T_EQU_low_path == T_EQU_upp_path:
         loc = load_spectrum_from_fits(T_EQU_low_path, wlmin=wlmin, wlmax=wlmax, normalize=False)
         loc['TEQ'] = T_EQU
@@ -272,59 +272,6 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
 
     return loc
 
-"""
-def calculate_model(modeldb, observed_wl, resolution=0., teff=5777., logg=4.4374, feh=0.0, normalize=False) :
-
-    loc = {}
-    loc["modeldb"] = modeldb
-    loc["resolution"] = resolution
-    loc["teff"] = teff
-    loc["logg"] = logg
-    loc["feh"] = feh
-
-    loc["model_file"] = get_BTSettl_best_model_file(modeldb, teff=teff)
-    
-    model_spectrum = get_BTSettl_spectrum_from_fits(loc["model_file"])
-    
-    wl0 = observed_wl[0] * (1.0 - 2.0 / (constants.c / 1000.))
-    wlf = observed_wl[-1] * (1.0 + 2.0 / (constants.c / 1000.))
-
-    if wlf > model_spectrum['wl'][-1] :
-        print("WARNING: Requested wavelengths limits are outside permitted boundaries for stellar model")
-        print(wl0, ">", model_spectrum['wl'][0], "and", wlf, "<", model_spectrum['wl'][-1])
-        print("Setting wlf=2480 nm")
-        wlf = 2499.
-        mask = observed_wl < wlf * (1.0 - 2.0 / (constants.c / 1000.))
-        observed_wl = observed_wl[mask]
-    
-    wlmask = model_spectrum['wl'] > wl0
-    wlmask &= model_spectrum['wl'] < wlf
-    
-    model_chunk = {}
-    model_chunk['wl'] = model_spectrum['wl'][wlmask]
-    model_chunk['flux'] = model_spectrum['flux'][wlmask]
-    model_chunk['fluxerr'] = model_spectrum['fluxerr'][wlmask]
-
-    resampled_model_chunk = {}
-    resampled_model_chunk['wl'] = deepcopy(observed_wl)
-    resampled_model_chunk['fluxerr'] = np.zeros_like(observed_wl)
-
-    resampled_model_chunk['flux'] = espectrolib.interp_spectrum(observed_wl, model_chunk['wl'], model_chunk['flux'], kind='linear')
-
-    if normalize :
-        cont_model = fit_continuum(resampled_model_chunk['wl'][mask], resampled_model_chunk['flux'][mask], function='polynomial', order=3, nit=5, rej_low=2.0, rej_high=2.5, grow=1, med_filt=0, percentile_low=0., percentile_high=100.,min_points=10, xlabel="", ylabel="", plot_fit=True, verbose=False)
-    
-        resampled_model_chunk['flux'][mask] /= cont_model
-
-    if resolution != 0. :
-        resampled_model_chunk = convolve_spectrum(resampled_model_chunk, to_resolution=resolution)
-    
-    loc["wl"] = resampled_model_chunk["wl"]
-    loc["flux"] = resampled_model_chunk["flux"]
-    loc["fluxerr"] = resampled_model_chunk["fluxerr"]
-
-    return loc
-"""
 
 def fit_continuum(wav, spec, function='polynomial', order=3, nit=5, rej_low=2.0,
     rej_high=2.5, grow=1, med_filt=0, percentile_low=0., percentile_high=100.,
