@@ -40,6 +40,7 @@ def get_spectrum_info_from_fits(filename) :
         Get information in model FITS header
         
         :param filename: string, input exoplanet atmosphere model FITS file name
+
         :return loc: dict, dictionary containing information on input model
         """
 
@@ -65,6 +66,7 @@ def get_best_model_file(modeldb, T_EQU=1100, AB=-4, R_PL=1.25, M_PL=1.81, specie
         :param R_PL: float, input planet radius [RJup]
         :param M_PL: float, input planet mass [MJup]
         :param species: string, input molecular species
+
         :return filepath: string, file path for best model matching input params
         """
 
@@ -90,9 +92,13 @@ def get_best_model_file(modeldb, T_EQU=1100, AB=-4, R_PL=1.25, M_PL=1.81, specie
             ab_key = 'AB_{0}'.format(species)
 
         d_T_EQU = np.abs(datastore[key]['TEQ'] - T_EQU)
-        d_ab = np.abs(datastore[key][ab_key] - AB)
         d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
         d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
+    
+        if ab_key in datastore[key].keys() :
+            d_ab = np.abs(datastore[key][ab_key] - AB)
+        else :
+            d_ab = mind_ab+1  # when the key doesn't exist
     
         if d_T_EQU <= mind_T_EQU and d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
             mind_T_EQU = d_T_EQU
@@ -104,7 +110,7 @@ def get_best_model_file(modeldb, T_EQU=1100, AB=-4, R_PL=1.25, M_PL=1.81, specie
     return datastore[minkey]['filepath']
 
 
-def load_spectrum_from_fits(filename, wlmin=950., wlmax=2500., normalize=False) :
+def load_spectrum_from_fits(filename, wlmin=900., wlmax=2500., normalize=False) :
 
     # initialize model spectrum with header info
     loc = get_spectrum_info_from_fits(filename)
@@ -203,7 +209,7 @@ def interpolate_model_linear(y1, y2, T1, T2, T_EQU):
     return model_interp
 
 
-def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=950., wlmax=2500., return_wl=False, return_emission=False) :
+def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., wlmax=2500., return_wl=False, return_emission=False) :
     """
         Get file path of best model in input database
         
@@ -257,27 +263,18 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=950., 
             minkey_new.append(key)
     
     for i, key in enumerate(minkey_new):
-        if datastore[minkey_new[0]]['TEQ']>T_EQU:
-            print('Value of T_EQU out of bounds: too small')
-            T_EQU_low_path = datastore[minkey_new[0]]["filepath"] #called T_EQU_low_path but is actually nearest 
-            hdu_low=fits.open(T_EQU_low_path) #called hdu_low but is actually nearest
+        if datastore[key]['TEQ']>T_EQU:
+            T_EQU_upp_path = key
+            T_EQU_upp = datastore[T_EQU_upp_path]['TEQ']
+            T_EQU_low_path = minkey_new[i-1]
+            T_EQU_low = datastore[T_EQU_low_path]['TEQ']
             break
-        elif datastore[minkey_new[-1]]['TEQ']<T_EQU:
-            T_EQU_low_path = datastore[minkey_new[-1]]['filepath'] #called T_EQU_low_path but is actually nearest
-            hdu_low=fits.open(T_EQU_low_path) #called hdu_low but is actually nearest
-            print('Value of T_EQU out of bounds: too big')
-            break
-        elif datastore[key]['TEQ']>T_EQU:
-            T_EQU_upp_path = datastore[key]['filepath']
-            T_EQU_upp = datastore[key]['TEQ']
-            T_EQU_low_path = datastore[minkey_new[i-1]]['filepath']
-            T_EQU_low = datastore[minkey_new[i-1]]['TEQ']
-            hdu_low=fits.open(T_EQU_low_path)
-            hdu_upp=fits.open(T_EQU_upp_path)
-            model_interp_transm = interpolate_model_linear(hdu_low[1].data, hdu_upp[1].data, T_EQU_low, T_EQU_upp, T_EQU)
-            if return_emission :
-                model_interp_emiss = interpolate_model_linear(hdu_low[2].data, hdu_upp[2].data, T_EQU_low, T_EQU_upp, T_EQU)
-            break
+
+    hdu_low=fits.open(T_EQU_low_path)
+    hdu_upp=fits.open(T_EQU_upp_path)
+    model_interp_transm = interpolate_model_linear(hdu_low[1].data, hdu_upp[1].data, T_EQU_low, T_EQU_upp, T_EQU)
+    if return_emission :
+        model_interp_emiss = interpolate_model_linear(hdu_low[2].data, hdu_upp[2].data, T_EQU_low, T_EQU_upp, T_EQU)
 
     hdr = hdu_low[0].header
     wl_0 = hdr["CRVAL1"]
@@ -287,47 +284,45 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=950., 
 
     loc = get_spectrum_info_from_fits(T_EQU_low_path)
 
+    loc['T_EQU_low_path'] = T_EQU_low_path
+    loc['T_EQU_upp_path'] = T_EQU_upp_path
     loc['TEQ'] = T_EQU
-    
-    # create wavelength array
-    wl = np.geomspace(wl_0*1000., wl_f*1000., wl_num)
-    wlmask = np.where(np.logical_and(wl > wlmin, wl < wlmax))
-    
-    if datastore[minkey_new[-1]]['TEQ']>T_EQU and datastore[minkey_new[0]]['TEQ']<T_EQU:
-        loc['T_EQU_low_path'] = T_EQU_low_path
-        loc['T_EQU_upp_path'] = T_EQU_upp_path
-        if return_wl :
-            loc['wl'] = wl[wlmask]
-    
-        if "TRANSMISSION" in hdu_low :
-            transmission = model_interp_transm
-            loc['transmission'] = transmission[wlmask]
-    
-        if "EMISSION" in hdu_low and return_emission :
-            emission = model_interp_emiss
-            loc['emission'] = emission[wlmask]
-    else:
-        loc['T_EQU_nearest_path'] = T_EQU_low_path
-        loc['transmission'] = np.nan
-        loc['emission'] = np.nan
+
+    if return_wl :
+        # create wavelength array
+        wl = np.geomspace(wl_0*1000., wl_f*1000., wl_num)
+        wlmask = np.where(np.logical_and(wl > wlmin, wl < wlmax))
+        loc['wl'] = wl[wlmask]
+
+    if "TRANSMISSION" in hdu_low :
+        transmission = model_interp_transm
+        loc['transmission'] = transmission[wlmask]
+
+    if "EMISSION" in hdu_low and return_emission :
+        emission = model_interp_emiss
+        loc['emission'] = emission[wlmask]
+
 
     return loc
 
 
 """
 def calculate_model(modeldb, observed_wl, resolution=0., teff=5777., logg=4.4374, feh=0.0, normalize=False) :
+
     loc = {}
     loc["modeldb"] = modeldb
     loc["resolution"] = resolution
     loc["teff"] = teff
     loc["logg"] = logg
     loc["feh"] = feh
+
     loc["model_file"] = get_BTSettl_best_model_file(modeldb, teff=teff)
     
     model_spectrum = get_BTSettl_spectrum_from_fits(loc["model_file"])
     
     wl0 = observed_wl[0] * (1.0 - 2.0 / (constants.c / 1000.))
     wlf = observed_wl[-1] * (1.0 + 2.0 / (constants.c / 1000.))
+
     if wlf > model_spectrum['wl'][-1] :
         print("WARNING: Requested wavelengths limits are outside permitted boundaries for stellar model")
         print(wl0, ">", model_spectrum['wl'][0], "and", wlf, "<", model_spectrum['wl'][-1])
@@ -343,20 +338,25 @@ def calculate_model(modeldb, observed_wl, resolution=0., teff=5777., logg=4.4374
     model_chunk['wl'] = model_spectrum['wl'][wlmask]
     model_chunk['flux'] = model_spectrum['flux'][wlmask]
     model_chunk['fluxerr'] = model_spectrum['fluxerr'][wlmask]
+
     resampled_model_chunk = {}
     resampled_model_chunk['wl'] = deepcopy(observed_wl)
     resampled_model_chunk['fluxerr'] = np.zeros_like(observed_wl)
+
     resampled_model_chunk['flux'] = espectrolib.interp_spectrum(observed_wl, model_chunk['wl'], model_chunk['flux'], kind='linear')
+
     if normalize :
         cont_model = fit_continuum(resampled_model_chunk['wl'][mask], resampled_model_chunk['flux'][mask], function='polynomial', order=3, nit=5, rej_low=2.0, rej_high=2.5, grow=1, med_filt=0, percentile_low=0., percentile_high=100.,min_points=10, xlabel="", ylabel="", plot_fit=True, verbose=False)
     
         resampled_model_chunk['flux'][mask] /= cont_model
+
     if resolution != 0. :
         resampled_model_chunk = convolve_spectrum(resampled_model_chunk, to_resolution=resolution)
     
     loc["wl"] = resampled_model_chunk["wl"]
     loc["flux"] = resampled_model_chunk["flux"]
     loc["fluxerr"] = resampled_model_chunk["fluxerr"]
+
     return loc
 """
 
@@ -366,36 +366,47 @@ def fit_continuum(wav, spec, function='polynomial', order=3, nit=5, rej_low=2.0,
     """
     Continuum fitting re-implemented from IRAF's 'continuum' function
     in non-interactive mode only but with additional options.
+
     :Parameters:
     
     wav: array(float)
         abscissa values (wavelengths, velocities, ...)
+
     spec: array(float)
         spectrum values
+
     function: str
         function to fit to the continuum among 'polynomial', 'spline3'
+
     order: int
         fit function order:
         'polynomial': degree (not number of parameters as in IRAF)
         'spline3': number of knots
+
     nit: int
         number of iteractions of non-continuum points
         see also 'min_points' parameter
+
     rej_low: float
         rejection threshold in unit of residul standard deviation for point
         below the continuum
+
     rej_high: float
         same as rej_low for point above the continuum
+
     grow: int
         number of neighboring points to reject
+
     med_filt: int
         median filter the spectrum on 'med_filt' pixels prior to fit
         improvement over IRAF function
         'med_filt' must be an odd integer
+
     percentile_low: float
         reject point below below 'percentile_low' percentile prior to fit
         improvement over IRAF function
         "percentile_low' must be a float between 0. and 100.
+
     percentile_high: float
         same as percentile_low but reject points in percentile above
         'percentile_high'
@@ -403,10 +414,12 @@ def fit_continuum(wav, spec, function='polynomial', order=3, nit=5, rej_low=2.0,
     min_points: int
         stop rejection iterations when the number of points to fit is less than
         'min_points'
+
     plot_fit: bool
         if true display two plots:
             1. spectrum, fit function, rejected points
             2. residual, rejected points
+
     verbose: bool
         if true fit information is printed on STDOUT:
             * number of fit points
@@ -549,12 +562,15 @@ def __fwhm_to_sigma(fwhm):
 def __convolve_spectrum(waveobs, flux, err, to_resolution, from_resolution=None):
     """
         Spectra resolution smoothness/degradation. Procedure:
+
         1) Define a bin per measure which marks the wavelength range that it covers.
         2) For each point, identify the window segment to convolve by using the bin widths and the FWHM.
         3) Build a gaussian using the sigma value and the wavelength values of the spectrum window.
         4) Convolve the spectrum window with the gaussian and save the convolved value.
+
         If "from_resolution" is not specified or its equal to "to_resolution", then the spectrum
         is convolved with the instrumental gaussian defined by "to_resolution".
+
         If "to_resolution" is specified, the convolution is made with the difference of
         both resolutions in order to degrade the spectrum.
     """
@@ -647,8 +663,10 @@ def __convolve_spectrum(waveobs, flux, err, to_resolution, from_resolution=None)
 def convolve_spectrum(spectrum, to_resolution, from_resolution=None):
     """
     Spectra resolution smoothness/degradation.
+
     If "from_resolution" is not specified or its equal to "to_resolution", then the spectrum
     is convolved with the instrumental gaussian defined by "to_resolution".
+
     If "from_resolution" is specified, the convolution is made with the difference of
     both resolutions in order to degrade the spectrum.
     """
