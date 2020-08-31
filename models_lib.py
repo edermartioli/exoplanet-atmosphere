@@ -243,7 +243,6 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
         else :
             ab_key = 'AB_{0}'.format(species)
     
-        d_ab = np.abs(datastore[key][ab_key] - AB)
         d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
         d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
         
