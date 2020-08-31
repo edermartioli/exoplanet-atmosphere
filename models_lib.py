@@ -258,8 +258,9 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
     
         minkey_new=[]
         for key in datastore.keys():
-            if datastore[key]['AB_'+species] == nearest_ab and np.around(datastore[key]['RPJUP'],3) == nearest_R_PL and np.around(datastore[key]['MPJUP'],3) == nearest_M_PL:
-                minkey_new.append(key)
+            if ab_key in datastore[key].keys() :
+                if datastore[key][ab_key] == nearest_ab and np.around(datastore[key]['RPJUP'],3) == nearest_R_PL and np.around(datastore[key]['MPJUP'],3) == nearest_M_PL:
+                    minkey_new.append(key)
     
         for i, key in enumerate(minkey_new):
             if datastore[key]['TEQ']>T_EQU:
