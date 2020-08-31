@@ -246,7 +246,12 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
         d_ab = np.abs(datastore[key][ab_key] - AB)
         d_R_PL = np.abs(datastore[key]['RPJUP'] - R_PL)
         d_M_PL = np.abs(datastore[key]['MPJUP'] - M_PL)
-    
+        
+        if ab_key in datastore[key].keys() :
+            d_ab = np.abs(datastore[key][ab_key] - AB)
+        else :
+            d_ab = mind_ab+1  # when the key doesn't exist
+
         if d_ab <= mind_ab and d_R_PL <= mind_R_PL and d_M_PL <= mind_M_PL and (species in datastore[key]['filename']):
             mind_ab = d_ab
             mind_R_PL, mind_M_PL = d_R_PL, d_M_PL
