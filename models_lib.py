@@ -226,7 +226,9 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
     print(T_EQU,T_EQU_low,T_EQU_upp)
     
     T_EQU_low_path = get_best_model_file(modeldb, T_EQU=T_EQU_low, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
+    print("T_EQU_low_path=",T_EQU_low_path)
     T_EQU_upp_path = get_best_model_file(modeldb, T_EQU=T_EQU_upp, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
+    print("T_EQU_upp_path=",T_EQU_upp_path)
 
     hdu_low=fits.open(T_EQU_low_path)
     hdu_upp=fits.open(T_EQU_upp_path)
