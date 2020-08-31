@@ -220,8 +220,10 @@ def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., 
         :return loc: dictionary with interpolated results
         """
 
-    T_EQU_low = np.floor(float(T_EQU)/100.)*100
-    T_EQU_upp = np.ceil(float(T_EQU)/100.)*100
+    T_EQU_low = np.floor(float(T_EQU)/100.)*100.
+    T_EQU_upp = np.ceil(float(T_EQU)/100.)*100.
+    
+    print(T_EQU,T_EQU_low,T_EQU_upp)
     
     T_EQU_low_path = get_best_model_file(modeldb, T_EQU=T_EQU_low, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
     T_EQU_upp_path = get_best_model_file(modeldb, T_EQU=T_EQU_upp, AB=AB, R_PL=R_PL, M_PL=M_PL, species=species)
