@@ -11,7 +11,7 @@
     
     Simple usage example:
     
-    python generate_library.py --species="H2O" --libdir=./mini-lib/
+    python generate_library.py --libdir=./mini-lib/
     
     """
 
@@ -27,7 +27,9 @@ import os,sys
 import numpy as np
 
 import models_lib
-import exoatmoslib, exoatmos_params
+import exoatmoslib
+#import exoatmos_params
+import exoatmos_params_test as exoatmos_params
 import json
 
 parser = OptionParser()
@@ -49,19 +51,30 @@ if not os.path.exists(options.libdir):
     os.makedirs(options.libdir)
 
 # load user defined parameters
-p = exoatmos_params.load_exoatmos_lib_parameters(options.libdir)
+p = exoatmos_params.load_exoatmos_lib_parameters(options.libdir, variable_parameters=True)
 
 # get variable parameters
 variables = exoatmoslib.get_exoatmos_variables(p)
 
+# Uncomment below to check variable parameters and ranges
+#print(variables)
+
 # set array of parameter dicts being one for each model in the library
 p_array = exoatmoslib.get_parameters_array(p, variables, abundance_index=0)
+
+"""
+    # uncomment this part to check full set of parameters to input in each
+    # model calculation for all library spectra
+for par in p_array :
+    print(p_array)
+    print("\n")
+"""
 
 models = {}
 
 for p_loc in p_array :
     if options.verbose :
-        print("Generating model file:", filename)
+        print("Generating model file:", p_loc['FILENAME'])
     
     # Calculate model using petitRADTRANS
     model = exoatmoslib.calculate_model(p_loc)

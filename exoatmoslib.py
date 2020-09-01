@@ -127,14 +127,12 @@ def opacity_files(species, mode='lbl') :
         #loc['CO'] = 'CO_all_iso'
         loc['CO2'] = 'CO2_main_iso'
         loc['NH3'] = 'H2O_main_iso'
-    
         loc['H2'] = 'H2_main_iso'
         loc['H2S'] = 'H2S_main_iso'
         loc['C2H2'] = 'C2H2_main_iso'
         loc['HCN'] = 'HCN_main_iso'
         loc['O3'] = 'O3_main_iso'
         loc['PH3'] = 'PH3_main_iso'
-        
         loc['TiO'] = 'TiO_all_iso'
         loc['FeH'] = 'FeH_main_iso'
 
@@ -292,7 +290,7 @@ def get_parameters_array(p, variables, abundance_index=0) :
             for rp in rp_array :
                 for mp in mp_array :
                     p_loc = deepcopy(p)
-                    output = "{0}/{1}_T{2:04d}_ab{3:.2f}_Rp{4:.3f}_Mp{5:.3f}.fits".format(p['LIBDIR'],p['SPECIES'][abundance_index],int(T_equ),ab,rp,mp)
+                    output = "{0}/{1}_T{2:.0f}_ab{3:.2f}_Rp{4:.3f}_Mp{5:.3f}.fits".format(p['LIBDIR'],p['SPECIES'][abundance_index],T_equ,ab,rp,mp)
                     p_loc['FILENAME'] = output
                     
                     p_loc['TEQ'] = T_equ
