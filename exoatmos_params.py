@@ -49,17 +49,24 @@ def load_exoatmos_lib_parameters(libdir="", variable_parameters=False) :
     
     ######### CHEMICAL COMPOSITION #############
     # Define abundance of Helium
-    p['AB_He'] = 0.17
+    p['AB_He'] = 0.24
     # Define abundance of H2
-    p['AB_H2'] = 0.80
+    p['AB_H2'] = 0.74
     
     # Whether or not to generate separate models for each species
+    # E. Martioli 01/09/2020: this is not implemented, i.e., this variable doesn't do anything
     p['SEPARATE_SPECIES'] = True
+    
     # Species for the atmospheric composition of models
     #p['SPECIES'] = ['H2O', 'CO2', 'CO', 'CH4']
     p['SPECIES'] = ['H2O']
+    
     # Log of molar fraction abundances: log([X]/[H2])
     if variable_parameters :
+        #p['ABUNDANCES'] = [[-6,-2, 3], -6, -3, -8] # to include other species in the model
+        # ! WARNING: only one species can vary abundance at a time!
+        # One can change which species is variable by re-setting p['VARIABLE_SPECIES_INDEX'], or
+        # by simply changing the order of species in p['SPECIES'] above
         p['ABUNDANCES'] = [[-4,-2,3]]
     else :
         p['ABUNDANCES'] = [-3.5]
