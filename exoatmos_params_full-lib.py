@@ -56,10 +56,18 @@ def load_exoatmos_lib_parameters(libdir="", variable_parameters=False) :
     # Whether or not to generate separate models for each species
     p['SEPARATE_SPECIES'] = True
     # Species for the atmospheric composition of models
-    #p['SPECIES'] = ['H2O', 'CO2', 'CO', 'CH4']
+    #p['SPECIES'] = ['H2O', 'CO2', 'CO', 'CH4'] # to include other species in the model
+    #p['SPECIES'] = ['CO2']
+    #p['SPECIES'] = ['CO']
+    #p['SPECIES'] = ['CH4']
     p['SPECIES'] = ['H2O']
+    
     # Log of molar fraction abundances: log([X]/[H2])
     if variable_parameters :
+        #p['ABUNDANCES'] = [[-6,-2, 3], -6, -3, -8] # to include other species in the model
+        #p['ABUNDANCES'] = [[-10,-2,10]]
+        #p['ABUNDANCES'] = [[-10,-2,10]]
+        #p['ABUNDANCES'] = [[-10,-2,10]]
         p['ABUNDANCES'] = [[-8,-2,13]]
     else :
         p['ABUNDANCES'] = [-3.5]
