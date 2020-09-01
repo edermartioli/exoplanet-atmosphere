@@ -62,7 +62,7 @@ def save_to_fits(output, loc) :
         header.set(loc["SPECIES"][i], True, 'Presence of molecule')
         ab_keyword = 'AB_{0}'.format(loc["SPECIES"][i])
         header.set(ab_keyword, loc["ABUNDANCES"][i], 'Abundance of molecule w.r.t. H2, log10([X]/[H2])')
-        op_keyword = 'OP_{0}'.format(loc["OPACITY_FILES"][i])
+        op_keyword = 'OP_{0}'.format(loc["SPECIES"][i])
         header.set(op_keyword, loc["OPACITY_FILES"][i], 'Opacity file for molecule')
 
     if 'AB_He' not in header.keys() :
