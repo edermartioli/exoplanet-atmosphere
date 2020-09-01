@@ -19,9 +19,6 @@ This GitHub page contains the following:
 - models_lib.py: Python file containing functions useful to the calculation of the library. 
 - select_models.py: Python file used to select nearest entry of the library or interpolate, as a function of the input parameters given in Python file called exoatmos_params.py and the options given in the command line. 
 
-- spirou_export_1D_spectrum.py: Python routine that reads SPIRou reduced spectra and exports the data to 1D spectrum in FITS format, suitable for the transmission spectroscopy analysis (placeholder for on-going work).
-- spiroulib.py: Python library for handling SPIRou data (placeholder for on-going work).
-
 Disk space needed is as follows: 140.0 Mb for the content of this GitHub page, 20.65 Gb for the full scale library, 4.3 Gb for the opacity files in c-k mode, and 240 Gb for the opacity files in lbl mode. Opacity files and installation of `petitRADTRANS` are available at https://petitradtrans.readthedocs.io/en/latest/. 
 
 Note that the full scale library `exoatmos_lib` as it is defined in exoatmos_params_full-lib.py takes around 9.5 hours to run per molecule. 
