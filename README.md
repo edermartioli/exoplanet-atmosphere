@@ -14,11 +14,11 @@ This GitHub page contains the following:
 - exoatmos_params.py: Python file where input parameters can be changed. By default parameters are set to those representing the exoplanet HD 189733 b. 
 - exoatmos_params_full-lib.py: Python file where input parameters can be changed. Here the parameters are set to those representing an average Hot Jupiter planet. 
 - exoatmoslib.py: Python file containing functions useful to the calculation of the library. 
-- exoplanetlib.py: Python library for exoplanetary quantities (placeholder for on-going work).
 - generate_library.py: Python file used to generate library, as a function of the input parameters given in Python file called exoatmos_params.py
 - generate_spectrum.py: Python file used to generate an individual spectrum of the library. 
 - models_lib.py: Python file containing functions useful to the calculation of the library. 
 - select_models.py: Python file used to select nearest entry of the library or interpolate, as a function of the input parameters given in Python file called exoatmos_params.py and the options given in the command line. 
+
 - spirou_export_1D_spectrum.py: Python routine that reads SPIRou reduced spectra and exports the data to 1D spectrum in FITS format, suitable for the transmission spectroscopy analysis (placeholder for on-going work).
 - spiroulib.py: Python library for handling SPIRou data (placeholder for on-going work).
 
