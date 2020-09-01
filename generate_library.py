@@ -28,8 +28,8 @@ import numpy as np
 
 import models_lib
 import exoatmoslib
-#import exoatmos_params
-import exoatmos_params_test as exoatmos_params
+import exoatmos_params
+#import exoatmos_params_full_lib as exoatmos_params
 import json
 
 parser = OptionParser()
