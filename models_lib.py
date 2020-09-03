@@ -107,7 +107,7 @@ def get_best_model_file(modeldb, T_EQU=1100, AB=-4, R_PL=1.25, M_PL=1.81, specie
     return datastore[minkey]['filepath']
 
 
-def load_spectrum_from_fits(filename, wlmin=900., wlmax=2500., normalize=False) :
+def load_spectrum_from_fits(filename, wlmin=950., wlmax=2500., normalize=False) :
 
     # initialize model spectrum with header info
     loc = get_spectrum_info_from_fits(filename)
@@ -207,7 +207,7 @@ def interpolate_model_linear(y1, y2, T1, T2, T_EQU):
 
 
 
-def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=900., wlmax=2500., return_wl=False, return_emission=False) :
+def get_interpolated_model(modeldb, T_EQU, AB, R_PL, M_PL, species, wlmin=950., wlmax=2500., return_wl=False, return_emission=False) :
     """
         Get file path of best model in input database
         
