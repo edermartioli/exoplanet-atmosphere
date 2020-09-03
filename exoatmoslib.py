@@ -51,8 +51,8 @@ def save_to_fits(output, loc) :
         keyword = 'CONT{0:03d}'.format(i)
         header.set(keyword, loc["CONTINUUM_OPACITIES"][i], 'Continuum opacities')
 
-    for item in loc["RAYLEIGH_SPECIES"] :
-        keyword = 'RS_{0}'.format(item)
+    for i in range(len(loc["RAYLEIGH_SPECIES"])) :
+        keyword = 'RS_{0:03d}'.format(i)
         header.set(keyword, loc["RAYLEIGH_SPECIES"][i], 'Rayleigh scattering species')
 
     selecspc_index = loc['VARIABLE_SPECIES_INDEX']
